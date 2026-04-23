@@ -1,0 +1,455 @@
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>探索台灣 - 22縣市全攻略</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --tw-red: #cc2a1b; /* 傳統紅 */
+            --tw-green: #007d5d; /* 茄芷綠 */
+            --tw-blue: #005a9c; /* 茄芷藍 */
+            --tw-gold: #b28d42; /* 古典金 */
+            --tw-bg: #f4f1de; /* 舊宣紙色 */
+        }
+
+        body {
+            font-family: 'Noto Serif TC', serif;
+            background-color: var(--tw-bg);
+            color: #1a1a1a;
+            scroll-behavior: smooth;
+        }
+
+        .taiwan-title {
+            font-family: 'Zhi Mang Xing', cursive;
+        }
+
+        /* 台灣古早窗花背景 */
+        .window-pattern {
+            position: fixed;
+            inset: 0;
+            opacity: 0.03;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 30-30 30L0 30z' fill='none' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E");
+        }
+
+        /* 茄芷袋漸層邊條 */
+        .bag-border {
+            height: 6px;
+            background: linear-gradient(90deg, var(--tw-red) 33%, var(--tw-green) 33% 66%, var(--tw-blue) 66%);
+        }
+
+        /* 復古印章卡片 */
+        .retro-card {
+            background: #fff;
+            border: 2px solid #222;
+            box-shadow: 8px 8px 0px #222;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .retro-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px var(--tw-red);
+        }
+
+        .retro-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, transparent 50%, #222 50%);
+        }
+
+        .category-pill {
+            border: 2px solid #222;
+            font-weight: 900;
+            transition: all 0.2s;
+        }
+
+        .category-pill.active {
+            background: var(--tw-red);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .search-input {
+            border: 3px solid #222;
+            box-shadow: 6px 6px 0px #222;
+        }
+
+        .stamp-effect {
+            border: 3px solid var(--tw-red);
+            color: var(--tw-red);
+            padding: 2px 8px;
+            font-weight: 900;
+            transform: rotate(-5deg);
+            display: inline-block;
+        }
+
+        @keyframes inkFlow {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-ink {
+            animation: inkFlow 0.5s ease-out forwards;
+        }
+
+        /* 自定義捲軸 */
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--tw-bg); }
+        ::-webkit-scrollbar-thumb { background: #222; }
+
+        .guide-section {
+            border-left: 15px solid var(--tw-blue);
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="window-pattern"></div>
+    <div class="bag-border sticky top-0 z-[60]"></div>
+
+    <!-- 導覽 -->
+    <nav class="bg-white/90 backdrop-blur-sm border-b-2 border-black px-6 py-4 sticky top-[6px] z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="text-3xl font-black tracking-tighter taiwan-title">臺。誌</span>
+                <span class="bg-black text-white px-2 py-0.5 text-xs font-bold uppercase">Volume 3.0</span>
+            </div>
+            <div class="hidden md:flex space-x-6 text-sm font-black">
+                <a href="#home" class="hover:text-red-700 underline decoration-2 underline-offset-4">壹・首頁</a>
+                <a href="#special" class="hover:text-red-700 underline decoration-2 underline-offset-4 text-red-600">貳・祕傳專欄</a>
+                <a href="#explore" class="hover:text-red-700 underline decoration-2 underline-offset-4">參・目錄</a>
+                <a href="#stats" class="hover:text-red-700 underline decoration-2 underline-offset-4">肆・統計</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主視覺 -->
+    <header id="home" class="pt-24 pb-16 px-6 text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="mb-4">
+                <span class="stamp-effect text-sm">拒絕業配・真實台灣</span>
+            </div>
+            <h1 class="text-6xl md:text-9xl font-black mb-6 text-black tracking-tight leading-none">
+                萬象<span class="text-red-700 underline decoration-8 underline-offset-[12px]">台灣</span>
+            </h1>
+            <p class="text-xl md:text-2xl font-bold text-gray-800 mb-12 border-y-2 border-black py-4 inline-block px-8">
+                拒絕罐頭旅遊資訊，這是一份寫給內行人的生存指南。
+            </p>
+        </div>
+    </header>
+
+    <!-- 祕傳專欄區：攻略、雷區、檢核表 -->
+    <section id="special" class="container mx-auto px-6 mb-24">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            
+            <!-- 分級攻略清單 -->
+            <div class="retro-card p-8 bg-white border-blue-900 border-4">
+                <h2 class="text-2xl font-black mb-6 flex items-center gap-2">
+                    <i data-lucide="map"></i> 分級攻略清單
+                </h2>
+                <div class="space-y-6">
+                    <div class="border-b-2 border-dashed border-black pb-4">
+                        <h3 class="font-black text-red-700">【窮學生機車環島】</h3>
+                        <p class="text-sm mt-1">總長約 1,200 km / 預估 9-11 天</p>
+                        <p class="text-xs text-gray-500 mt-2 italic">必經路口：省道台1線與台9線交會處（枋寮），這是意志力的轉折點。</p>
+                    </div>
+                    <div class="border-b-2 border-dashed border-black pb-4">
+                        <h3 class="font-black text-green-700">【邊緣人三日遊：台東篇】</h3>
+                        <p class="text-sm mt-1">單趟 350 km / 預估 72 小時</p>
+                        <p class="text-xs text-gray-500 mt-2 italic">必經路口：台11線與台11乙交叉口，往北走就是沒訊號的海邊，適合獨處。</p>
+                    </div>
+                    <div class="pb-4">
+                        <h3 class="font-black text-blue-700">【全家出遊：清境大混戰】</h3>
+                        <p class="text-sm mt-1">山路 80 km / 預估 2 天 1 夜</p>
+                        <p class="text-xs text-gray-500 mt-2 italic">必經路口：台14甲線翠峰派出所前，連假必塞，請備好尿壺。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 在地雷區指南 -->
+            <div class="retro-card p-8 bg-red-50 border-red-900 border-4">
+                <h2 class="text-2xl font-black mb-6 flex items-center gap-2">
+                    <i data-lucide="alert-triangle"></i> 在地雷區指南
+                </h2>
+                <div class="space-y-4 text-sm font-bold">
+                    <div class="bg-white p-3 border-2 border-black">
+                        <span class="text-red-700">● 某知名夜市碳烤：</span>
+                        一支賣80元還只有兩口肉，這種店專燒觀光客，當地人走過去連看都不看。
+                    </div>
+                    <div class="bg-white p-3 border-2 border-black">
+                        <span class="text-red-700">● 網美山地景觀餐廳：</span>
+                        微波食品賣350元，你買的是那個搖搖欲墜的鞦韆租借費，不是食物。
+                    </div>
+                    <div class="bg-white p-3 border-2 border-black">
+                        <span class="text-red-700">● 車站門口神祕果汁：</span>
+                        永遠寫著「不加水不加糖」，結果吸一口全是碎冰，別當盤子。
+                    </div>
+                    <div class="bg-white p-3 border-2 border-black">
+                        <span class="text-red-700">● 墾丁大街烤魷魚：</span>
+                        時價是世界上最可怕的詞，沒問價格就點，錢包會直接蒸發。
+                    </div>
+                </div>
+            </div>
+
+            <!-- 物資裝備檢核表 -->
+            <div class="retro-card p-8 bg-green-50 border-green-900 border-4">
+                <h2 class="text-2xl font-black mb-6 flex items-center gap-2">
+                    <i data-lucide="check-square"></i> 物資裝備檢核表
+                </h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <h3 class="font-black border-b-2 border-black mb-2 text-xs">【合歡山攀登】</h3>
+                        <ul class="text-[10px] space-y-1 list-disc list-inside">
+                            <li>洋蔥式穿法（必備）</li>
+                            <li>高熱量行動糧（巧克力）</li>
+                            <li>離線地圖（訊號極差）</li>
+                            <li>頭燈與備用電池</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-black border-b-2 border-black mb-2 text-xs">【墾丁海域】</h3>
+                        <ul class="text-[10px] space-y-1 list-disc list-inside">
+                            <li>海洋友善防曬乳</li>
+                            <li>大容量飲用水</li>
+                            <li>防水袋（手機保護）</li>
+                            <li>備用夾腳拖（必斷）</li>
+                        </ul>
+                    </div>
+                    <div class="col-span-2 mt-4">
+                        <h3 class="font-black border-b-2 border-black mb-2 text-xs">【機車環島通用】</h3>
+                        <ul class="text-[10px] grid grid-cols-2 gap-x-2">
+                            <li>免洗內褲 x10</li>
+                            <li>兩截式雨衣（禁止小飛俠）</li>
+                            <li>機油檢查紀錄</li>
+                            <li>全台急修機車行清單</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 交互過濾器 -->
+    <div id="explore" class="container mx-auto px-6 mb-12">
+        <div class="flex flex-col space-y-8">
+            <div class="max-w-xl mx-auto w-full mb-8">
+                <input type="text" id="searchInput" placeholder="搜尋 鄉鎮、風味 或 記憶..." 
+                    class="search-input w-full bg-white py-5 px-8 rounded-none text-xl focus:outline-none focus:ring-4 focus:ring-red-100">
+            </div>
+            <div class="flex flex-wrap gap-4 justify-center" id="filterContainer">
+                <button class="category-pill active px-8 py-3 bg-white" data-filter="all">全類別</button>
+                <button class="category-pill px-8 py-3 bg-white" data-filter="attraction">景點地圖</button>
+                <button class="category-pill px-8 py-3 bg-white" data-filter="food">地方旬味</button>
+                <button class="category-pill px-8 py-3 bg-white" data-filter="culture">人文傳統</button>
+            </div>
+            <div class="flex flex-wrap gap-3 justify-center border-t-2 border-black/10 pt-6" id="regionFilterContainer">
+                <button class="category-pill px-4 py-1.5 text-xs bg-white" data-filter="north">北部區域</button>
+                <button class="category-pill px-4 py-1.5 text-xs bg-white" data-filter="middle">中部區域</button>
+                <button class="category-pill px-4 py-1.5 text-xs bg-white" data-filter="south">南部區域</button>
+                <button class="category-pill px-4 py-1.5 text-xs bg-white" data-filter="east">東部區域</button>
+                <button class="category-pill px-4 py-1.5 text-xs bg-white" data-filter="island">離島區域</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 內容網格 -->
+    <main class="container mx-auto px-6 min-h-screen">
+        <div id="contentGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+            <!-- JS 動態注入內容 -->
+        </div>
+    </main>
+
+    <!-- 結語區域 -->
+    <section id="stats" class="mt-40 bg-[#222] text-white py-32 px-6">
+        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div>
+                <h2 class="text-5xl font-black mb-8 leading-tight">文化不是裝飾，<br>是生活後的餘味。</h2>
+                <p class="text-gray-400 leading-loose text-lg">
+                    我們持續更新這份名單，不只是為了旅遊，而是為了記住這座島嶼在快速變遷下，依然溫熱的各個角落。
+                </p>
+            </div>
+            <div class="grid grid-cols-2 gap-8">
+                <div class="border-l-4 border-red-700 pl-6">
+                    <div class="text-4xl font-black text-red-700">22</div>
+                    <div class="text-xs font-bold text-gray-500 mt-2">COUNTIES</div>
+                </div>
+                <div class="border-l-4 border-green-700 pl-6">
+                    <div class="text-4xl font-black text-green-700">80+</div>
+                    <div class="text-xs font-bold text-gray-500 mt-2">ENTRIES</div>
+                </div>
+                <div class="border-l-4 border-blue-700 pl-6">
+                    <div class="text-4xl font-black text-blue-700">100%</div>
+                    <div class="text-xs font-bold text-gray-500 mt-2">ACCURACY</div>
+                </div>
+                <div class="border-l-4 border-yellow-600 pl-6">
+                    <div class="text-4xl font-black text-yellow-600">NEW</div>
+                    <div class="text-xs font-bold text-gray-500 mt-2">UPDATED</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-12 text-center bg-white border-t-4 border-black">
+        <p class="font-black text-black">探索台灣圖誌 • 數位檔案庫 2026</p>
+        <p class="text-gray-400 text-xs mt-2 uppercase tracking-widest">Designed for Cultural Preservation</p>
+    </footer>
+
+    <script>
+        const data = [
+            // 北部
+            { name: "基隆：正濱漁港", cat: "attraction", reg: "north", desc: "彩色屋在灰濛的基隆雨天裡，是唯一的熱烈。這裡是北台灣的海之門。", tags: ["基隆", "海濱", "彩色"], map: "正濱漁港彩色屋" },
+            { name: "基隆：阿華炒麵", cat: "food", reg: "north", desc: "咖哩炒麵是基隆人的傲骨，濃郁鹹香中藏著海港的汗水與勞力氣息。", tags: ["基隆", "咖哩", "廟口"], map: "基隆+阿華炒麵" },
+            { name: "台北：迪化老街", cat: "culture", reg: "north", desc: "中藥味、布匹與乾貨，這條街收納了清領、日治至今的商貿靈魂。", tags: ["台北", "百年老店", "年貨"], map: "迪化街" },
+            { name: "台北：馬辣頂級麻辣鴛鴦火鍋", cat: "food", reg: "north", desc: "全台知名的麻辣火鍋，是外國遊客來台必吃的豐富饗宴代表。", tags: ["台北", "火鍋", "吃到飽"], map: "馬辣火鍋" },
+            { name: "新北：九份山城", cat: "attraction", reg: "north", desc: "雨霧中的石階梯與紅燈籠，這裡是宮崎駿動畫般的夢幻，也是礦業的興衰史。", tags: ["新北", "老街", "金礦"], map: "九份" },
+            { name: "新北：永和豆漿", cat: "food", reg: "north", desc: "從橋頭起家的傳奇，燒餅油條配鹹豆漿，是全球華人的宵夜記憶。", tags: ["新北", "早餐", "宵夜"], map: "世界豆漿大王" },
+            { name: "桃園：忠烈祠", cat: "culture", reg: "north", desc: "全台保存最完整的日治神社，木造建築在暮色下流露沉靜美感。", tags: ["桃園", "神社", "歷史"], map: "桃園忠烈祠" },
+            { name: "新竹：城隍廟小吃", cat: "food", reg: "north", desc: "廟前聚集了全台最密集的米粉與貢丸，這不只是食物，是新竹風的味道。", tags: ["新竹", "米粉", "貢丸"], map: "新竹城隍廟" },
+
+            // 中部
+            { name: "苗栗：三義木雕", cat: "culture", reg: "middle", desc: "這裡的木香從上一世紀就沒斷過，職人一刀一刻，雕琢出客家堅韌。", tags: ["苗栗", "工藝", "木香"], map: "三義木雕博物館" },
+            { name: "台中：審計新村", cat: "attraction", reg: "middle", desc: "舊宿舍群華麗轉身，現在是青年創業與文青聚落的最強心臟。", tags: ["台中", "文創", "市集"], map: "審計新村" },
+            { name: "台中：逢甲夜市", cat: "food", reg: "middle", desc: "創意小吃的發源地，大腸包小腸、章魚小丸子，這裡是台灣宵夜的戰場。", tags: ["台中", "夜市", "雞排"], map: "逢甲夜市" },
+            { name: "彰化：八卦山大佛", cat: "attraction", reg: "middle", desc: "地標性的莊嚴大佛，從高處守望著彰化平原與居民的日常。", tags: ["彰化", "佛像", "視野"], map: "八卦山大佛" },
+            { name: "彰化：北門口肉圓", cat: "food", reg: "middle", desc: "外皮炸到酥脆爆開，內餡藏著干貝，這是彰化人最奢侈的午后。", tags: ["彰化", "酥皮肉圓", "必吃"], map: "北門口肉圓" },
+            { name: "南投：日月潭向山", cat: "attraction", reg: "middle", desc: "前衛的清水模建築，如雙手環抱湖泊，靜謐中展現極致美學。", tags: ["南投", "建築", "湖景"], map: "向山遊客中心" },
+            { name: "南投：微熱山丘", cat: "food", reg: "middle", desc: "八卦山上的鳳梨傳奇，奉茶文化讓這顆土鳳梨酥有了溫暖的人情味。", tags: ["南投", "鳳梨酥", "奉茶"], map: "微熱山丘" },
+            { name: "雲林：布袋戲館", cat: "culture", reg: "middle", desc: "史艷文與素還真的誕生地，感受掌中乾坤如何震驚戲壇。", tags: ["雲林", "布袋戲", "虎尾"], map: "雲林布袋戲館" },
+
+            // 南部
+            { name: "嘉義：阿里山林鐵", cat: "attraction", reg: "south", desc: "世界級的高山鐵路，穿過雲海與原始森林，是台灣最深邃的綠意。", tags: ["嘉義", "森林", "火車"], map: "阿里山國家風景區" },
+            { name: "嘉義：林聰明沙鍋魚頭", cat: "food", reg: "south", desc: "大鍋熬煮的濃郁鮮味，讓這份味道紅到登上 Netflix 影集。", tags: ["嘉義", "排隊名店", "砂鍋"], map: "林聰明沙鍋魚頭" },
+            { name: "台南：神農街", cat: "culture", reg: "south", desc: "台南保存最好的古街道，入夜後燈光搖曳，彷彿能聽見五條港的浪潮。", tags: ["台南", "老宅", "燈籠"], map: "神農街" },
+            { name: "台南：赤崁棺材板", cat: "food", reg: "south", desc: "府城傳奇小吃，濃稠內餡裝入炸過的吐司，見證中西合併的創意歷史。", tags: ["台南", "古早味", "康樂市場"], map: "赤崁棺材板" },
+            { name: "高雄：駁二藝術特區", cat: "attraction", reg: "south", desc: "海港倉庫與當代藝術的碰撞，這裡是高雄從鋼鐵轉向溫柔的象徵。", tags: ["高雄", "海港", "藝術"], map: "駁二藝術特區" },
+            { name: "高雄：丹丹漢堡", cat: "food", reg: "south", desc: "南台灣限定的速食霸主，麵線焿配炸雞塊，這是絕無僅有的衝擊滋味。", tags: ["高雄", "速食", "南霸天"], map: "丹丹漢堡" },
+            { name: "屏東：勝利星村", cat: "culture", reg: "south", desc: "眷村活化新標竿，大片日式官舍區現在是品茶、閱讀與創意的搖籃。", tags: ["屏東", "眷村", "老建築"], map: "勝利星村" },
+            { name: "屏東：潮州冷熱冰", cat: "food", reg: "south", desc: "外冷內熱的驚喜感，現煮糯米糰與挫冰的奇妙共舞。", tags: ["屏東", "甜品", "潮州"], map: "潮州冷熱冰" },
+
+            // 東部
+            { name: "宜蘭：羅東林場", cat: "attraction", reg: "east", desc: "遺留的貯木池倒映著藍天，訴說著太平山伐木時代的輝煌與滄桑。", tags: ["宜蘭", "歷史", "自然"], map: "羅東林業文化園區" },
+            { name: "宜蘭：三星蔥油餅", cat: "food", reg: "east", desc: "全台最負盛名的青蔥，包入現桿餅皮，一口咬下盡是田野鮮香。", tags: ["宜蘭", "小吃", "三星"], map: "阿婆蔥油餅" },
+            { name: "花蓮：太魯閣燕子口", cat: "attraction", reg: "east", desc: "大理岩峽谷在腳下崩裂，感受地殼變動留下的鬼斧神工。", tags: ["花蓮", "壯觀", "世界級"], map: "燕子口步道" },
+            { name: "花蓮：扁食", cat: "food", reg: "east", desc: "清淡湯頭配上皮薄如翼的抄手，是花蓮人傳承幾代的家常美味。", tags: ["花蓮", "老牌", "液香"], map: "花蓮+扁食" },
+            { name: "台東：伯朗大道", cat: "attraction", reg: "east", desc: "沒有電線桿阻擋視線，只有黃澄澄稻海與遠方連綿的山脈。", tags: ["台東", "池上", "天堂路"], map: "伯朗大道" },
+            { name: "台東：東河包子", cat: "food", reg: "east", desc: "台11線上最溫暖的補給，手工揉製的麵皮包裹著扎實多汁的內餡。", tags: ["台東", "排隊", "海線"], map: "東河包子" },
+
+            // 離島
+            { name: "澎湖：大菓葉玄武岩", cat: "attraction", reg: "island", desc: "壯麗的柱狀玄武岩，是數百萬年前火山噴發在地圖上留下的刻痕。", tags: ["澎湖", "地質", "宏偉"], map: "池東大菓葉玄武岩" },
+            { name: "澎湖：二崁聚落", cat: "culture", reg: "island", desc: "珊瑚礁（咾咕石）築成的百年宅邸，每一磚一瓦都有海的鹹味。", tags: ["澎湖", "古宅", "人文"], map: "二崁聚落" },
+            { name: "金門：翟山坑道", cat: "attraction", reg: "island", desc: "鬼斧神工的水中坑道，戰時的運補基地現在是全台最壯闊的音樂廳。", tags: ["金門", "坑道", "震撼"], map: "翟山坑道" },
+            { name: "金門：一條根", cat: "culture", reg: "island", desc: "這不只是藥草，是金門土地醞釀出的生活智慧與療癒。", tags: ["金門", "特色", "產物"], map: "金門+一條根" },
+            { name: "馬祖：芹壁村", cat: "attraction", reg: "island", desc: "地中海風格的石頭屋聚落，對望著大海，是遺落在北疆的珍珠。", tags: ["馬祖", "石屋", "北竿"], map: "芹壁村" },
+            { name: "馬祖：老酒麵線", cat: "food", reg: "island", desc: "香醇老酒驅散海風冷冽，蛋包與紅糟肉帶出最深厚的島嶼溫情。", tags: ["馬祖", "必吃", "暖身"], map: "馬祖+老酒麵線" }
+        ];
+
+        const grid = document.getElementById('contentGrid');
+        const searchInput = document.getElementById('searchInput');
+        const typeFilters = document.querySelectorAll('#filterContainer .category-pill');
+        const regionFilters = document.querySelectorAll('#regionFilterContainer .category-pill');
+
+        let activeType = 'all';
+        let activeRegion = 'all';
+        let searchQuery = '';
+
+        function render() {
+            grid.innerHTML = '';
+            const filtered = data.filter(item => {
+                const matchesType = activeType === 'all' || item.cat === activeType;
+                const matchesRegion = activeRegion === 'all' || item.reg === activeRegion;
+                const searchContent = (item.name + item.desc + item.tags.join('')).toLowerCase();
+                const matchesSearch = searchContent.includes(searchQuery.toLowerCase());
+                
+                return matchesType && matchesRegion && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-32 text-center animate-ink">
+                        <h3 class="text-3xl font-black text-gray-300">查無此檔</h3>
+                        <p class="text-gray-400 mt-4">或許該縣市的靈魂尚未被我們捕捉。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = `retro-card p-6 flex flex-col h-full animate-ink`;
+                card.style.animationDelay = `${index * 0.03}s`;
+                
+                const regionName = {
+                    north: "北部", middle: "中部", south: "南部", east: "東部", island: "離島"
+                }[item.reg];
+
+                const catName = {
+                    attraction: "必看・地景", food: "必吃・地方味", culture: "必知・人文"
+                }[item.cat];
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-4 border-b-2 border-black pb-2">
+                        <span class="text-[10px] font-black uppercase tracking-tighter text-red-700">${catName}</span>
+                        <span class="text-[10px] font-black bg-black text-white px-2">${regionName}</span>
+                    </div>
+                    <h3 class="text-2xl font-black mb-4 text-black">${item.name}</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-6 flex-grow">
+                        ${item.desc}
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        ${item.tags.map(t => `<span class="text-[10px] font-bold border border-black/20 px-1.5 py-0.5">#${t}</span>`).join('')}
+                    </div>
+                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.map)}" target="_blank" class="block w-full text-center py-3 bg-black text-white text-xs font-black transition-all hover:bg-red-700 active:translate-y-1">
+                        開啟數位導航
+                    </a>
+                `;
+                grid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            render();
+        });
+
+        typeFilters.forEach(f => {
+            f.addEventListener('click', () => {
+                typeFilters.forEach(btn => btn.classList.remove('active'));
+                f.classList.add('active');
+                activeType = f.dataset.filter;
+                render();
+            });
+        });
+
+        regionFilters.forEach(f => {
+            f.addEventListener('click', () => {
+                if (f.classList.contains('active')) {
+                    f.classList.remove('active');
+                    activeRegion = 'all';
+                } else {
+                    regionFilters.forEach(btn => btn.classList.remove('active'));
+                    f.classList.add('active');
+                    activeRegion = f.dataset.filter;
+                }
+                render();
+            });
+        });
+
+        window.onload = () => {
+            lucide.createIcons();
+            render();
+        };
+    </script>
+</body>
+</html>
